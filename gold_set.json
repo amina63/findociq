@@ -1,0 +1,14 @@
+[
+  {"fichier": "factures/facture_test.pdf", "numero_facture": "INV-2026-001", "date": "22/07/2026", "emetteur": "Atelier Bois & Cie", "client": "Amina Ouaayi", "total": 1900.00},
+  {"fichier": "factures/facture_test_2.pdf", "numero_facture": "FAC-2026-0088", "date": "15/03/2026", "emetteur": "Papeterie Al Amal SARL", "client": null, "total": 1230.00},
+  {"fichier": "factures/facture_test_3.pdf", "numero_facture": "DOS-778", "date": "02/06/2026", "emetteur": "Cabinet Comptable Idrissi", "client": "Amina Ouaayi", "total": 3300.00},
+  {"fichier": "factures/f4.pdf", "numero_facture": "FA-2026-1042", "date": "05/01/2026", "emetteur": "Electro Maroc Distribution", "client": "Amina Ouaayi", "total": 415.00},
+  {"fichier": "factures/f5.pdf", "numero_facture": "REC-990", "date": "11/02/2026", "emetteur": "Pharmacie Centrale Rabat", "client": "Amina Ouaayi", "total": 175.00},
+  {"fichier": "factures/f6.pdf", "numero_facture": null, "date": "20/02/2026", "emetteur": "Librairie Universelle SARL", "client": "Amina Ouaayi", "total": 450.00},
+  {"fichier": "factures/f7.pdf", "numero_facture": "BC-2026-317", "date": "01/03/2026", "emetteur": "Meubles Design Casa", "client": "Amina Ouaayi", "total": 3090.00},
+  {"fichier": "factures/f8.pdf", "numero_facture": "INV-EN-2201", "date": null, "emetteur": "Global Tech Supplies Ltd", "client": "Amina Ouaayi", "total": 620.00},
+  {"fichier": "factures/f9.pdf", "numero_facture": "FD-2026-500", "date": "10/03/2026", "emetteur": "Quincaillerie Générale du Nord", "client": "Amina Ouaayi", "total": 980.00},
+  {"fichier": "factures/f10.pdf", "numero_facture": "DOS-2026-88", "date": "18/03/2026", "emetteur": "Cabinet Juridique Bennani", "client": "Amina Ouaayi", "total": 3700.00},
+  {"fichier": "factures/f11.pdf", "numero_facture": "XY-2026-77", "date": "25/03/2026", "emetteur": null, "client": null, "total": 600.00},
+  {"fichier": "factures/f12.pdf", "numero_facture": "INV-2026-777", "date": "30/03/2026", "emetteur": "Boulangerie Patisserie Al Warda", "client": "Amina Ouaayi", "total": 530.00}
+]

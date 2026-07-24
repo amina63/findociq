@@ -2,3 +2,4 @@
 venv/
 *.pdf
 texte_extrait.txt
+__pycache__/
