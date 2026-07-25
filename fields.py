@@ -74,7 +74,7 @@ def valider_champs(champs):
 
 
 if __name__ == "__main__":
-    fichiers = ["facteurs/facture_test.pdf", "facteurs/facture_test_2.pdf", "facteurs/facture_test_3.pdf"]
+    fichiers = ["factures/facture_test.pdf", "factures/facture_test_2.pdf", "factures/facture_test_3.pdf"]
 
     for fichier in fichiers:
         print(f"\n=== {fichier} ===")
