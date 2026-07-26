@@ -1,0 +1,122 @@
+[
+  {
+    "fichier": "factures/facture_test.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de la facture ?", "reponse": "INV-2026-001", "type": "lookup"},
+      {"question": "Qui est l'émetteur de cette facture ?", "reponse": "Atelier Bois & Cie", "type": "lookup"},
+      {"question": "Quelle est la date de la facture ?", "reponse": "22/07/2026", "type": "lookup"},
+      {"question": "Quel est le prix d'une seule chaise, sachant qu'un lot de 4 coûte 350.00 MAD ?", "reponse": "87.50 MAD", "type": "calcul"},
+      {"question": "Quel est le numéro de téléphone de l'émetteur ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/facture_test_2.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de référence de cette facture ?", "reponse": "FAC-2026-0088", "type": "lookup"},
+      {"question": "Quel est le fournisseur ?", "reponse": "Papeterie Al Amal SARL", "type": "lookup"},
+      {"question": "Combien de classeurs ont été achetés ?", "reponse": "20", "type": "lookup"},
+      {"question": "Quel est le prix total des cartouches d'encre et des classeurs combinés ?", "reponse": "780.00 MAD", "type": "calcul"},
+      {"question": "Quel est le mode de paiement utilisé ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/facture_test_3.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de dossier ?", "reponse": "DOS-778", "type": "lookup"},
+      {"question": "Quel est le nom du cabinet émetteur ?", "reponse": "Cabinet Comptable Idrissi", "type": "lookup"},
+      {"question": "Quelle est la date d'émission ?", "reponse": "02/06/2026", "type": "lookup"},
+      {"question": "Quelle est la différence entre le coût de la tenue de comptabilité et celui de la déclaration fiscale ?", "reponse": "1700.00 MAD", "type": "calcul"},
+      {"question": "Quel est le numéro de TVA du cabinet ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f4.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de facture ?", "reponse": "FA-2026-1042", "type": "lookup"},
+      {"question": "Qui est le vendeur ?", "reponse": "Electro Maroc Distribution", "type": "lookup"},
+      {"question": "Combien de souris sans fil ont été achetées ?", "reponse": "2", "type": "lookup"},
+      {"question": "Quelle est la différence de prix entre le lot de souris et le lot de câbles HDMI ?", "reponse": "65.00 MAD", "type": "calcul"},
+      {"question": "Quelle est la date de livraison prévue ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f5.pdf",
+    "questions": [
+      {"question": "Quel est le numéro du reçu ?", "reponse": "REC-990", "type": "lookup"},
+      {"question": "Qui a émis ce reçu ?", "reponse": "Pharmacie Centrale Rabat", "type": "lookup"},
+      {"question": "Quel est le prix unitaire du Médicament A ?", "reponse": "85.00 MAD", "type": "lookup"},
+      {"question": "Quelle est la différence entre le montant payé pour le Médicament A et celui pour le Médicament B ?", "reponse": "5.00 MAD", "type": "calcul"},
+      {"question": "Quel est le nom du pharmacien ayant délivré les médicaments ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f6.pdf",
+    "questions": [
+      {"question": "Quelle est la date de cette facture ?", "reponse": "20/02/2026", "type": "lookup"},
+      {"question": "Quel est l'émetteur de cette facture ?", "reponse": "Librairie Universelle SARL", "type": "lookup"},
+      {"question": "Combien de livres ont été achetés ?", "reponse": "3", "type": "lookup"},
+      {"question": "Quel serait le prix total pour 5 livres au même prix unitaire ?", "reponse": "750.00 MAD", "type": "calcul"},
+      {"question": "Quel est le numéro de cette facture ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f7.pdf",
+    "questions": [
+      {"question": "Quelle est la référence de ce bon de commande ?", "reponse": "BC-2026-317", "type": "lookup"},
+      {"question": "Quel est le fournisseur ?", "reponse": "Meubles Design Casa", "type": "lookup"},
+      {"question": "Quel est le prix du bureau en bois massif ?", "reponse": "2200.00 MAD", "type": "lookup"},
+      {"question": "Quelle est la différence de prix entre le bureau et la chaise ergonomique ?", "reponse": "1310.00 MAD", "type": "calcul"},
+      {"question": "Quel est le délai de livraison indiqué ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f8.pdf",
+    "questions": [
+      {"question": "What is the invoice number?", "reponse": "INV-EN-2201", "type": "lookup"},
+      {"question": "Who issued this invoice?", "reponse": "Global Tech Supplies Ltd", "type": "lookup"},
+      {"question": "What is the unit price of one USB-C hub?", "reponse": "150.00 MAD", "type": "lookup"},
+      {"question": "What would be the total cost of 3 USB-C hubs at that unit price?", "reponse": "450.00 MAD", "type": "calcul"},
+      {"question": "What is the invoice date?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f9.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de cette facture ?", "reponse": "FD-2026-500", "type": "lookup"},
+      {"question": "Quel est l'émetteur de cette facture ?", "reponse": "Quincaillerie Générale du Nord", "type": "lookup"},
+      {"question": "Quel est le montant total de cette facture ?", "reponse": "980.00 MAD", "type": "lookup"},
+      {"question": "Quel serait 10% du montant total de cette facture ?", "reponse": "98.00 MAD", "type": "calcul"},
+      {"question": "Quel est le nom du livreur ayant remis la commande ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f10.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de dossier ?", "reponse": "DOS-2026-88", "type": "lookup"},
+      {"question": "Quel est le nom du cabinet ?", "reponse": "Cabinet Juridique Bennani", "type": "lookup"},
+      {"question": "Quel est le montant de la rédaction du contrat ?", "reponse": "2200,00 MAD", "type": "lookup"},
+      {"question": "Quelle est la différence entre le coût de la rédaction du contrat et celui de la consultation ?", "reponse": "700,00 MAD", "type": "calcul"},
+      {"question": "Quel est le taux horaire appliqué par le cabinet ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f11.pdf",
+    "questions": [
+      {"question": "Quelle est la référence de ce document ?", "reponse": "XY-2026-77", "type": "lookup"},
+      {"question": "Quelle est la date de ce document ?", "reponse": "25/03/2026", "type": "lookup"},
+      {"question": "Quel est le montant du service de maintenance ?", "reponse": "600.00 MAD", "type": "lookup"},
+      {"question": "Si une TVA de 20% s'applique, quel serait le montant total TTC ?", "reponse": "720.00 MAD", "type": "calcul"},
+      {"question": "Qui est l'émetteur de ce document ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures/f12.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de facture ?", "reponse": "INV-2026-777", "type": "lookup"},
+      {"question": "Qui est l'émetteur ?", "reponse": "Boulangerie Patisserie Al Warda", "type": "lookup"},
+      {"question": "Quel est le prix du gâteau d'anniversaire ?", "reponse": "350.00 MAD", "type": "lookup"},
+      {"question": "Quelle est la différence entre le prix du gâteau et le total des viennoiseries ?", "reponse": "170.00 MAD", "type": "calcul"},
+      {"question": "Quel est l'ingrédient utilisé dans le gâteau d'anniversaire ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  }
+]
