@@ -28,8 +28,9 @@ Règles strictes :
 
 Réponds UNIQUEMENT avec un objet JSON de cette forme :
 {{
-  "reponse": "ta réponse ici, ou le message d'absence",
-  "citation": "le passage exact du texte qui justifie la réponse, ou null si absente"
+ "reponse": "ta réponse finale ici, ou le message d'absence",
+  "citation": "le(s) passage(s) EXACT(S) du texte source utilisés (mot pour mot), ou null si absent",
+  "calcul": "si un calcul a été nécessaire, montre-le ici clairement (ex: '90 - 85 = 5'), sinon null"
 }}
 """
 
