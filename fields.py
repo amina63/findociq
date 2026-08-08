@@ -18,23 +18,28 @@ SCHEMA = """
 }
 """
 
-def extraire_champs(texte_document):
+def extraire_champs(texte_document, schema=None):
     """
     Envoie le texte du document au LLM avec des instructions strictes,
     et retourne les champs extraits sous forme de dictionnaire Python.
+    Si aucun schema n'est précisé, utilise le schéma facture par défaut (SCHEMA).
     """
+
+    if schema is None:
+        schema = SCHEMA
 
     prompt = f"""Voici le texte d'un document financier :
 
 {texte_document}
 
 Extrais les champs suivants et réponds UNIQUEMENT avec un objet JSON valide, rien d'autre (pas de phrase avant ou après) :
-{SCHEMA}
+{schema}
 
 Règles strictes :
 - Utilise null si une information est absente du document.
 - N'invente jamais une valeur qui n'est pas explicitement dans le texte.
 - Le champ "total" doit être un nombre, sans le symbole monétaire.
+- Pour un champ "company" ou "emetteur" : c'est le nom du COMMERCE/MAGASIN qui émet le document, généralement en gros caractères, souvent accompagné de mentions comme "SDN BHD", "SARL", ou une adresse juste en dessous. Ce n'est PAS un nom de personne isolé en première ligne (comme un caissier).
 """
 
     reponse = requests.post(
@@ -44,9 +49,9 @@ Règles strictes :
             "prompt": prompt,
             "stream": False,
             "format": "json",
-                    "options": {
-            "temperature": 0
-        }
+            "options": {
+                "temperature": 0
+            }
         }
     )
 
