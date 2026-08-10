@@ -14,7 +14,11 @@ SCHEMA = """
   "date": string ou null,
   "emetteur": string ou null,
   "client": string ou null,
-  "total": number ou null
+  "total": number ou null,
+  "lignes": [
+    {"description": string, "montant": number},
+    ...
+  ]
 }
 """
 
