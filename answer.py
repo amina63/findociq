@@ -26,7 +26,7 @@ def indexer_documents(liste_fichiers):
     return index, chunks_avec_source
 
 
-def repondre_avec_rag(question, index, chunks_avec_source, k=3):
+def repondre_avec_rag(question, index, chunks_avec_source, k=5):
     """
     Cherche les k chunks les plus pertinents pour la question,
     puis demande au LLM de répondre en se basant uniquement sur eux.
