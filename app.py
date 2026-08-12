@@ -49,44 +49,47 @@ with onglet_qa:
         ["Document unique (direct)", "Plusieurs documents (RAG)"]
     )
 
+    fichier_choisi = None
     if mode == "Document unique (direct)":
         fichier_choisi = st.selectbox("Choisis un document :", fichiers_disponibles)
-        question = st.text_input("Ta question :", key="q_direct")
 
-        if st.button("Répondre", key="btn_direct") and question:
-            with st.spinner("Lecture du document..."):
+    # Initialise l'historique de conversation, une seule fois
+    if "historique_chat" not in st.session_state:
+        st.session_state.historique_chat = []
+
+    # Réaffiche tout l'historique déjà accumulé
+    for message in st.session_state.historique_chat:
+        with st.chat_message(message["role"]):
+            st.write(message["contenu"])
+            if message["role"] == "assistant":
+                st.caption(f"Mode : {message['mode']} | Citation : {message['citation']}")
+
+    # Zone de saisie en bas, façon chat
+    question = st.chat_input("Pose ta question ici...")
+
+    if question:
+        # Affiche immédiatement la question de l'utilisateur
+        with st.chat_message("user"):
+            st.write(question)
+        st.session_state.historique_chat.append({"role": "user", "contenu": question})
+
+        # Calcule la réponse selon le mode choisi
+        with st.spinner("Réflexion en cours..."):
+            if mode == "Document unique (direct)":
                 texte = extraire_texte_pdf(fichier_choisi)
                 resultat = repondre_question(texte, question)
-
-            st.write("**Réponse :**", resultat["reponse"])
-            st.write("**Citation source :**", resultat["citation"])
-
-    else:
-        question = st.text_input("Ta question :", key="q_rag")
-
-        if st.button("Répondre", key="btn_rag") and question:
-            with st.spinner("Indexation et recherche..."):
+            else:
                 index, chunks_avec_source = indexer_documents(fichiers_disponibles)
                 resultat = repondre_avec_rag(question, index, chunks_avec_source)
 
-            st.write("**Réponse :**", resultat["reponse"])
-            st.write("**Citation source :**", resultat["citation"])            
-with onglet_metriques:
-    st.subheader("Fiabilité mesurée du système")
+        # Affiche la réponse de l'assistant
+        with st.chat_message("assistant"):
+            st.write(resultat["reponse"])
+            st.caption(f"Mode : {mode} | Citation : {resultat['citation']}")
 
-    st.write("**Extraction de champs (eval_extraction.py, 12 documents)**")
-    st.table({
-        "Champ": ["numero_facture", "date", "emetteur", "client", "total"],
-        "Precision": [0.92, 1.00, 1.00, 1.00, 1.00],
-        "Recall": [1.00, 1.00, 0.82, 1.00, 1.00],
-        "F1": [0.96, 1.00, 0.90, 1.00, 1.00],
-    })
-
-    st.write("**RAG — retrieval et réponses par type de question (eval_rag.py, 60 questions)**")
-    st.table({
-        "Type": ["lookup", "calcul", "sans_réponse"],
-        "Retrieval hit-rate": ["72%", "92%", "67%"],
-        "Answer accuracy": ["42%", "25%", "67%"],
-    })
-
-    st.warning("⚠️ Limite connue : les questions nécessitant un calcul multi-étapes restent peu fiables (25% de bonnes réponses), même quand le bon document est correctement trouvé (92%).")
+        st.session_state.historique_chat.append({
+            "role": "assistant",
+            "contenu": resultat["reponse"],
+            "mode": mode,
+            "citation": resultat["citation"]
+        })
