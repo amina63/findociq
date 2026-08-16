@@ -93,3 +93,22 @@ with onglet_qa:
             "mode": mode,
             "citation": resultat["citation"]
         })
+with onglet_metriques:
+    st.subheader("Fiabilité mesurée du système")
+
+    st.write("**Extraction de champs (eval_extraction.py, 12 documents)**")
+    st.table({
+        "Champ": ["numero_facture", "date", "emetteur", "client", "total"],
+        "Precision": [0.92, 1.00, 1.00, 1.00, 1.00],
+        "Recall": [1.00, 1.00, 0.82, 1.00, 1.00],
+        "F1": [0.96, 1.00, 0.90, 1.00, 1.00],
+    })
+
+    st.write("**RAG — retrieval et réponses par type de question (eval_rag.py, 60 questions)**")
+    st.table({
+        "Type": ["lookup", "calcul", "sans_réponse"],
+        "Retrieval hit-rate": ["72%", "92%", "67%"],
+        "Answer accuracy": ["42%", "25%", "67%"],
+    })
+
+    st.warning("⚠️ Limite connue : les questions nécessitant un calcul multi-étapes restent peu fiables (25% de bonnes réponses), même quand le bon document est correctement trouvé (92%).")
