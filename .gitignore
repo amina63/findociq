@@ -5,3 +5,4 @@ texte_extrait.txt
 __pycache__/
 temp_*.pdf
 *.jpg
+output/
