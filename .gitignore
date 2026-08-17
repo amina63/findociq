@@ -1,6 +1,7 @@
 .env
 venv/
 *.pdf
+!FinDocIQ_Technical_Report.pdf
 texte_extrait.txt
 __pycache__/
 temp_*.pdf
