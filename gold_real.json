@@ -1,0 +1,102 @@
+[
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "langue": "fr",
+    "numero_facture": "562044387",
+    "date": "02 Juillet 2015",
+    "emetteur": [
+      "Free SAS",
+      "Free"
+    ],
+    "client": "de Lattre Alexis",
+    "total": 29.99
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "langue": "fr",
+    "numero_facture": "2022089083",
+    "date": "28/11/2022",
+    "emetteur": [
+      "NETPRESSE",
+      "Publication Annonce Légale"
+    ],
+    "client": [
+      "ALEXINUX",
+      "de Lattre Alexis"
+    ],
+    "total": 56.02
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "langue": "en",
+    "numero_facture": "42183017",
+    "date": "August 3, 2014",
+    "emetteur": [
+      "Amazon Web Services, Inc.",
+      "Amazon Web Services"
+    ],
+    "client": "iViveLabs Limited",
+    "total": 4.11
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "langue": "en",
+    "numero_facture": "BLR_WFLD20151000982590",
+    "date": "20-10-2015",
+    "emetteur": [
+      "WS Retail Services Pvt. Ltd.",
+      "Flipkart"
+    ],
+    "client": "Anushrut Singh",
+    "total": 319.0
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "langue": "de",
+    "numero_facture": "30064443",
+    "date": "7. Mai 2014",
+    "emetteur": [
+      "QualityHosting AG",
+      "QualityHosting"
+    ],
+    "client": [
+      "iViveLabs Ltd.",
+      "iViveLabs Limited"
+    ],
+    "total": 34.73
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "langue": "de",
+    "numero_facture": "R0005532486",
+    "date": "19.01.2016",
+    "emetteur": [
+      "Hetzner Online GmbH",
+      "Hetzner Online"
+    ],
+    "client": [
+      "Usegroup Inh. Jochen Stärk",
+      "Usegroup",
+      "Jochen Stärk"
+    ],
+    "total": 104.0
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "langue": "nl",
+    "numero_facture": "993548900",
+    "date": "19 april 2014",
+    "emetteur": "Coolblue B.V.",
+    "client": "Pino Bluebird",
+    "total": 717.97
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "langue": "nl",
+    "numero_facture": "VF1005193039",
+    "date": "8-9-2022",
+    "emetteur": null,
+    "client": "Strategic Corp",
+    "total": 49.99
+  }
+]

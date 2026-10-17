@@ -15,7 +15,8 @@ def obtenir_embedding(texte):
         json={
             "model": "bge-m3",
             "prompt": texte
-        }
+        },
+        timeout=300
     )
 
     resultat = reponse.json()

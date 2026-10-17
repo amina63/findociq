@@ -4,8 +4,9 @@ Système d'extraction et de question-réponse sur documents financiers (factures
 
 ## Fonctionnalités
 
-- **Extraction structurée** : numéro, date, émetteur, client, total, lignes de détail (JSON schema + LLM)
+- **Extraction structurée** : numéro, date, émetteur, client, total, devise, lignes de détail (JSON schema + LLM)
 - **Question/réponse ancrée** : réponses avec citation exacte du passage source, garde-fou anti-hallucination
+- **Calculs fiables** (`calcul.py`) : le LLM choisit l'opération et les valeurs, **Python fait le calcul**
 - **RAG multi-documents** : recherche automatique dans une collection de documents (FAISS + embeddings multilingues)
 - **OCR** : détection automatique document numérique/scanné, extraction via RapidOCR
 - **Vérifications comptables** : cohérence total = somme des lignes, ratios
@@ -39,45 +40,60 @@ streamlit run app.py
 
 Lancer les évaluations :
 ```bash
-python eval_extraction.py   # précision/recall/F1 extraction de champs
-python eval_rag.py          # retrieval + précision des réponses
-python eval_ocr.py          # précision OCR (nécessite le dossier sroie/, voir ci-dessous)
-python test_guardrail.py    # taux de refus sur questions sans réponse
+python eval_extraction.py                  # F1 extraction, 12 factures de test
+python eval_extraction.py gold_real.json   # F1 extraction, 8 factures réelles (voir ci-dessous)
+python eval_qa.py                          # 60 questions : direct / direct+calcul / RAG (~1h30 sur CPU)
+python eval_qa.py 2                        # test rapide sur 2 documents
+python eval_rag.py                         # taux de retrieval (bon document retrouvé)
+python eval_ocr.py                         # précision OCR (nécessite le dossier sroie/)
+python test_calcul.py                      # tests du moteur de calcul (sans Ollama)
 ```
+
+`eval_qa.py` sauvegarde chaque question dans `eval_qa_progress.json` et reprend là où il s'est arrêté ;
+supprimer ce fichier pour une nouvelle mesure complète.
 
 ## Données de test
 
-- `factures/` : 12 factures générées (templates variés, cas limites volontaires — champs manquants, formats différents)
-- `sroie/` : échantillon de 5 reçus scannés réels du dataset public [SROIE](https://github.com/zzzDavid/ICDAR-2019-SROIE) (images `.jpg` non versionnées, à retélécharger si besoin — labels `.json` inclus)
+- `factures/` : 12 factures générées (templates variés, cas limites volontaires — champs manquants, formats différents), questions dans `qa_pairs.json`, vérité terrain dans `gold_set.json`
+- `factures_reelles/` : 8 factures **réelles** (Free, Netpresse, AWS, Flipkart, QualityHosting, Hetzner, Coolblue, Saeco ; FR/EN/DE/NL) issues des dépôts open source invoice2data (MIT) et ZUGFeRD corpus (Apache 2.0). Non versionnées : voir `SOURCES_factures_reelles.md` pour les récupérer. Vérité terrain : `gold_real.json`
+- `sroie/` : échantillon de 5 reçus scannés réels du dataset public [SROIE](https://github.com/zzzDavid/ICDAR-2019-SROIE) (images `.jpg` non versionnées, labels `.json` inclus)
 
 ## Résultats mesurés
 
-**Extraction de champs** (12 documents, `eval_extraction.py`) :
+Une exécution, llama3.2 3B local, temperature 0. Petits échantillons : ordres de grandeur.
 
-| Champ | Precision | Recall | F1 |
-|---|---|---|---|
-| numero_facture | 0.92 | 1.00 | 0.96 |
-| date | 1.00 | 1.00 | 1.00 |
-| emetteur | 1.00 | 0.82 | 0.90 |
-| client | 1.00 | 1.00 | 1.00 |
-| total | 1.00 | 1.00 | 1.00 |
+**Extraction de champs — F1** (`eval_extraction.py`, comparaison normalisée : casse, accents, ponctuation et format de date ignorés)
 
-**RAG — 60 questions** (`eval_rag.py`, k=5) :
-
-| Type | Retrieval hit-rate | Answer accuracy |
+| Champ | 12 factures de test | 8 factures réelles |
 |---|---|---|
-| lookup | 72% | 42% |
-| calcul | 92% | 25% |
-| sans_réponse (garde-fou) | 67% | 67% |
+| numero_facture | 1.00 | 0.86 |
+| date | 1.00 | 1.00 |
+| emetteur | 0.91 | 0.86 |
+| client | 1.00 | 0.86 |
+| total | 1.00 | 1.00 |
+
+**Question/réponse — 60 questions** (`eval_qa.py`, k=5)
+
+| Type | Direct (bon document) | Direct + calcul Python | RAG (toutes) | RAG (questions identifiantes) |
+|---|---|---|---|---|
+| lookup (36) | 97% | 97% | 42% | 67% (8/12) |
+| calcul (12) | 33% | **83%** | 17% | 22% (2/9) |
+| sans_réponse (12) | 83% | 83% | 75% | 1/2 |
+
+- Calcul Python : 0 faux déclenchement sur les 48 questions qui ne sont pas des calculs.
+- Question **identifiante** : contient un mot qui n'apparaît que dans le document visé (ex. « gâteau d'anniversaire »). Les 24 autres questions lookup (« Quel est le fournisseur ? ») ne précisent pas de quelle facture il s'agit et n'ont pas de bonne réponse unique en mode RAG.
+- Retrieval (`eval_rag.py`, bon document dans le top-5) : lookup 72%, calcul 92%, sans_réponse 67%.
 
 **OCR** (5 reçus SROIE, `eval_ocr.py`) : total 100% (exact), date 60%, company 0% exact / 74% similarité textuelle.
 
 ## Limites connues
 
-- **Calculs multi-étapes** : le LLM local (llama3.2:3B) répond correctement à seulement ~25% des questions nécessitant un calcul, même quand le bon document est retrouvé (92%) — limite de raisonnement du modèle, pas du retrieval.
-- **DeepSeek-OCR** (scans difficiles) : non testé, nécessite un GPU dédié (16Go+ VRAM) non disponible en local ; en attente d'accès au serveur de l'équipe.
-- **Extraction de noms de commerce sur reçus scannés** : sensible aux erreurs OCR (espaces/caractères mal lus).
-- **Non-déterminisme** : les résultats du LLM peuvent varier légèrement d'une exécution à l'autre (temperature=0 utilisé pour limiter cet effet).
+- **Factures réelles** : les erreurs viennent surtout des mises en page complexes (intitulés et valeurs sur des lignes séparées, émetteur seulement en pied de page ou dans un logo) dont la structure est perdue à l'extraction du texte. Le modèle ne laisse jamais un champ vide (rappel 1.00) : quand il se trompe, il remplit avec une mauvaise valeur.
+- **Calculs** : le calcul Python n'est branché qu'en mode direct ; les erreurs restantes (2/12) sont des erreurs de planification du LLM (mauvaise opération choisie), jamais d'arithmétique. Le filtre de détection a été ajusté sur ces mêmes questions.
+- **Garde-fou** : 83% en direct ; hallucinations observées (émetteur inventé, dont une copie d'un exemple du prompt : « SDN BHD »).
+- **DeepSeek-OCR** (scans difficiles) : non testé, nécessite un GPU dédié non disponible en local.
+- **Non-déterminisme** : les résultats du LLM peuvent varier légèrement d'une exécution à l'autre (temperature=0 limite cet effet). Les appels au modèle sont bornés en longueur (`num_predict`) et en temps (5 min) pour éviter les générations sans fin.
+- Aucune facture marocaine réelle publique n'a pu être trouvée pour l'évaluation.
 
 ## Architecture
 
@@ -88,7 +104,8 @@ PDF/image → router.py (numérique vs scanné)
          ↓
     fields.py (extraction structurée, LLM + schéma JSON)
          ↓
-    Mode direct : answer_single_doc.py (1 document, tout le texte)
+    Mode direct : calcul.py (si calcul : LLM planifie, Python calcule)
+                  sinon answer_single_doc.py (1 document, tout le texte)
     Mode RAG    : chunk.py → embed.py → store.py (FAISS) → answer.py
          ↓
     app.py (interface Streamlit)

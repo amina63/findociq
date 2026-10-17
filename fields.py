@@ -15,10 +15,9 @@ SCHEMA = """
   "emetteur": string ou null,
   "client": string ou null,
   "total": number ou null,
-  "lignes": [
-    {"description": string, "montant": number},
-    ...
-  ]
+  "devise": string ou null,
+  "lignes": [{"description": "string", "quantite": "number ou null",
+              "prix_unitaire": "number ou null", "montant": "number"}]
 }
 """
 
@@ -46,20 +45,30 @@ Règles strictes :
 - Pour un champ "company" ou "emetteur" : c'est le nom du COMMERCE/MAGASIN qui émet le document, généralement en gros caractères, souvent accompagné de mentions comme "SDN BHD", "SARL", ou une adresse juste en dessous. Ce n'est PAS un nom de personne isolé en première ligne (comme un caissier).
 """
 
-    reponse = requests.post(
-        f"{url_base}/api/generate",
-        json={
-            "model": "llama3.2",
-            "prompt": prompt,
-            "stream": False,
-            "format": "json",
-            "options": {
-                "temperature": 0
-            }
-        }
-    )
+    try:
+        reponse = requests.post(
+            f"{url_base}/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": prompt,
+                "stream": False,
+                "format": "json",
+                "options": {
+                    "temperature": 0,
+                    "num_predict": 1024   # limite de longueur : évite une génération sans fin
+                }
+            },
+            timeout=300                   # limite de temps : 5 min maximum par appel
+        )
+        donnees = reponse.json()
+    except (requests.RequestException, ValueError) as e:
+        print("Erreur Ollama (extraction des champs) :", e)
+        return None
 
-    resultat_brut = reponse.json()["response"]
+    if "response" not in donnees:
+        print("Erreur Ollama :", donnees.get("error", donnees))
+        return None
+    resultat_brut = donnees["response"]
 
     try:
         champs = json.loads(resultat_brut)
@@ -72,13 +81,20 @@ Règles strictes :
 
 CHAMPS_ATTENDUS = ["numero_facture", "date", "emetteur", "client", "total"]
 
+VALEURS_VIDES = {"", "null", "none", "n/a", "na", "-"}
+
+
 def valider_champs(champs):
-    """S'assure que toutes les clés attendues existent, même si le modèle en a oublié."""
+    """S'assure que toutes les clés attendues existent, même si le modèle en a oublié.
+    Convertit aussi le TEXTE "null" (ou "None", "") en vraie valeur vide None :
+    le modèle écrit parfois "null" entre guillemets au lieu de null."""
     if champs is None:
         return None
     for champ in CHAMPS_ATTENDUS:
-        if champ not in champs:
-            champs[champ] = None
+        valeur = champs.get(champ)
+        if isinstance(valeur, str) and valeur.strip().lower() in VALEURS_VIDES:
+            valeur = None
+        champs[champ] = valeur
     return champs
 
 

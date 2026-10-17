@@ -34,18 +34,30 @@ Réponds UNIQUEMENT avec un objet JSON de cette forme :
 }}
 """
 
-    reponse = requests.post(
-        f"{url_base}/api/generate",
-        json={
-            "model": "llama3.2",
-            "prompt": prompt,
-            "stream": False,
-            "format": "json",
-            "options": {"temperature": 0}
-        }
-    )
+    try:
+        reponse = requests.post(
+            f"{url_base}/api/generate",
+            json={
+                "model": "llama3.2",
+                "prompt": prompt,
+                "stream": False,
+                "format": "json",
+                "options": {
+                    "temperature": 0,
+                    "num_predict": 512    # limite de longueur : évite une génération sans fin
+                }
+            },
+            timeout=300                   # limite de temps : 5 min maximum par appel
+        )
+        donnees = reponse.json()
+    except (requests.RequestException, ValueError) as e:
+        print("Erreur Ollama (question/réponse) :", e)
+        return None
 
-    resultat_brut = reponse.json()["response"]
+    if "response" not in donnees:
+        print("Erreur Ollama :", donnees.get("error", donnees))
+        return None
+    resultat_brut = donnees["response"]
 
     try:
         resultat = json.loads(resultat_brut)

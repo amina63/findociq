@@ -6,8 +6,20 @@ from answer_single_doc import repondre_question
 from answer import indexer_documents, repondre_avec_rag
 from fields import extraire_champs
 import os
+from calcul import repondre_calcul
+
 
 st.title("FinDocIQ — Extraction et Q&A sur documents financiers")
+
+@st.cache_data
+def champs_du_document(chemin):
+    return extraire_champs(extraire_texte_pdf(chemin)) or {}
+
+
+@st.cache_resource
+def index_de_la_collection(fichiers):
+    """Indexe la collection UNE seule fois (et non à chaque question)."""
+    return indexer_documents(list(fichiers))
 
 onglet_extraction, onglet_qa, onglet_metriques = st.tabs(
     ["📄 Extraction de champs", "💬 Question/Réponse", "📊 Métriques du système"]
@@ -28,17 +40,21 @@ with onglet_extraction:
             texte = extraire_texte_pdf(chemin_temporaire)
             champs = extraire_champs(texte)
 
-        st.success("Extraction terminée")
+        os.remove(chemin_temporaire)
 
-        # Tableau des champs simples (pas les lignes, affichées à part)
-        champs_simples = {k: v for k, v in champs.items() if k != "lignes"}
-        st.table(champs_simples)
+        if not champs:
+            st.error("L'extraction a échoué (voir le terminal). Vérifie qu'Ollama est lancé.")
+        else:
+            st.success("Extraction terminée")
 
-        if champs.get("lignes"):
-            st.write("**Lignes détaillées :**")
-            st.table(champs["lignes"])
-                
-        os.remove(chemin_temporaire)    
+            # Tableau des champs simples (pas les lignes, affichées à part)
+            champs_simples = {k: v for k, v in champs.items() if k != "lignes"}
+            st.table(champs_simples)
+
+            if champs.get("lignes"):
+                st.write("**Lignes détaillées :**")
+                st.table(champs["lignes"])
+
 with onglet_qa:
     st.subheader("Pose une question sur tes documents")
 
@@ -77,38 +93,55 @@ with onglet_qa:
         with st.spinner("Réflexion en cours..."):
             if mode == "Document unique (direct)":
                 texte = extraire_texte_pdf(fichier_choisi)
-                resultat = repondre_question(texte, question)
+                resultat = repondre_calcul(question, champs_du_document(fichier_choisi)) or repondre_question(texte, question)
+
             else:
-                index, chunks_avec_source = indexer_documents(fichiers_disponibles)
+                index, chunks_avec_source = index_de_la_collection(tuple(fichiers_disponibles))
                 resultat = repondre_avec_rag(question, index, chunks_avec_source)
+
+        if not resultat:
+            resultat = {"reponse": "Erreur : le modèle n'a pas répondu (voir le terminal).", "citation": None}
 
         # Affiche la réponse de l'assistant
         with st.chat_message("assistant"):
-            st.write(resultat["reponse"])
-            st.caption(f"Mode : {mode} | Citation : {resultat['citation']}")
+            st.write(resultat.get("reponse"))
+            st.caption(f"Mode : {mode} | Citation : {resultat.get('citation')}")
 
         st.session_state.historique_chat.append({
             "role": "assistant",
-            "contenu": resultat["reponse"],
+            "contenu": resultat.get("reponse"),
             "mode": mode,
-            "citation": resultat["citation"]
+            "citation": resultat.get("citation")
         })
 with onglet_metriques:
     st.subheader("Fiabilité mesurée du système")
+    st.caption("Chiffres mesurés lors d'une exécution (llama3.2 3B local, temperature 0). "
+               "Les petits échantillons donnent des ordres de grandeur, pas des mesures précises.")
 
-    st.write("**Extraction de champs (eval_extraction.py, 12 documents)**")
+    st.write("**1. Extraction de champs — F1 par champ (eval_extraction.py)**")
     st.table({
         "Champ": ["numero_facture", "date", "emetteur", "client", "total"],
-        "Precision": [0.92, 1.00, 1.00, 1.00, 1.00],
-        "Recall": [1.00, 1.00, 0.82, 1.00, 1.00],
-        "F1": [0.96, 1.00, 0.90, 1.00, 1.00],
+        "12 factures de test": [1.00, 1.00, 0.91, 1.00, 1.00],
+        "8 factures réelles": [0.86, 1.00, 0.86, 0.86, 1.00],
     })
+    st.caption("Factures réelles : Free, Netpresse, AWS, Flipkart, QualityHosting, Hetzner, Coolblue, Saeco "
+               "(FR/EN/DE/NL). La plupart des erreurs viennent de mises en page complexes "
+               "dont la structure est perdue à l'extraction du texte.")
 
-    st.write("**RAG — retrieval et réponses par type de question (eval_rag.py, 60 questions)**")
+    st.write("**2. Question/Réponse — 60 questions (eval_qa.py, k=5)**")
     st.table({
-        "Type": ["lookup", "calcul", "sans_réponse"],
-        "Retrieval hit-rate": ["72%", "92%", "67%"],
-        "Answer accuracy": ["42%", "25%", "67%"],
+        "Type": ["lookup (36)", "calcul (12)", "sans réponse (12)"],
+        "Direct (bon document)": ["97%", "33%", "83%"],
+        "Direct + calcul Python": ["97%", "83%", "83%"],
+        "RAG (toutes)": ["42%", "17%", "75%"],
+        "RAG (questions identifiantes)": ["67% (8/12)", "22% (2/9)", "1/2"],
     })
+    st.caption("Calcul Python : le LLM choisit l'opération, Python calcule. "
+               "0 faux déclenchement sur les 48 questions qui ne sont pas des calculs.")
 
-    st.warning("⚠️ Limite connue : les questions nécessitant un calcul multi-étapes restent peu fiables (25% de bonnes réponses), même quand le bon document est correctement trouvé (92%).")
+    st.info("ℹ️ Le modèle lit correctement un document donné (97%). La baisse en RAG vient surtout "
+            "des questions qui ne précisent pas de quelle facture il s'agit (24 sur 36) : "
+            "le mode RAG a besoin de questions précises.")
+    st.warning("⚠️ Limites connues : calcul Python branché seulement en mode direct ; "
+               "garde-fou anti-hallucination à 83% (ex. émetteur inventé quand il est absent du texte) ; "
+               "OCR des reçus scannés : nom du commerce 0% exact (74% de similarité).")

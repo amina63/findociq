@@ -7,3 +7,7 @@ __pycache__/
 temp_*.pdf
 *.jpg
 output/
+factures_reelles/
+
+televersements/
+eval_qa_progress*.json
