@@ -1,0 +1,66 @@
+[
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "questions": [
+      {"question": "Quel est l'identifiant client sur la facture Free ?", "reponse": "10577874", "type": "lookup"},
+      {"question": "Sur la facture Free, de combien le montant TTC dépasse-t-il le montant HT ?", "reponse": "5.00", "type": "calcul"},
+      {"question": "Quel est le numéro de téléphone portable de l'abonné Free ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de dossier indiqué sur la facture Netpresse ?", "reponse": "365146", "type": "lookup"},
+      {"question": "Sur la facture Netpresse, combien coûteraient 4 justificatifs PDF au prix unitaire indiqué ?", "reponse": "3.00", "type": "calcul"},
+      {"question": "Quel est le numéro de SIRET du client ALEXINUX ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de compte Amazon Web Services du client ?", "reponse": "296664039561", "type": "lookup"},
+      {"question": "Sur la facture AWS, quel pourcentage du total représente le service Amazon Glacier ?", "reponse": "54.01", "type": "calcul"},
+      {"question": "Quel est le numéro de TVA intracommunautaire d'Amazon Web Services ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "questions": [
+      {"question": "Quel est l'identifiant de commande (Order ID) de la facture Flipkart ?", "reponse": "OD304175096047380001", "type": "lookup"},
+      {"question": "Sur la facture Flipkart, quel était le prix de la carte mémoire avant la remise promotionnelle de 40 roupies ?", "reponse": "359.00", "type": "calcul"},
+      {"question": "Quelle est l'adresse email du client sur la facture Flipkart ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de contrat sur la facture QualityHosting ?", "reponse": "CON02858", "type": "lookup"},
+      {"question": "Sur la facture QualityHosting, combien coûtent au total les deux lignes Small Business StandardExchange 2010 ?", "reponse": "7.78", "type": "calcul"},
+      {"question": "Quel est le numéro de téléphone du client iViveLabs ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "questions": [
+      {"question": "Quel est le numéro client (Kundennummer) sur la facture Hetzner ?", "reponse": "K0100077603", "type": "lookup"},
+      {"question": "Sur la facture Hetzner, quel est le prix total des 6 adresses IP supplémentaires ?", "reponse": "5.04", "type": "calcul"},
+      {"question": "Quelle est la date de livraison des serveurs Hetzner ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "questions": [
+      {"question": "Quel est le numéro de commande (ordernummer) sur la facture Coolblue ?", "reponse": "12572103", "type": "lookup"},
+      {"question": "Sur la facture Coolblue, combien ont coûté ensemble la Nintendo 3DS XL et le jeu Mario Kart 7 ?", "reponse": "233.99", "type": "calcul"},
+      {"question": "Quelle est l'adresse email du client Pino Bluebird ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "questions": [
+      {"question": "Quel est le montant de la TVA (BTW bedrag) sur la facture Saeco ?", "reponse": "8.68", "type": "lookup"},
+      {"question": "Sur la facture Saeco, quel montant reste-t-il si on retire la TVA du total ?", "reponse": "41.31", "type": "calcul"},
+      {"question": "Quel est le nom du livreur de la commande Saeco ?", "reponse": null, "type": "sans_reponse"}
+    ]
+  }
+]

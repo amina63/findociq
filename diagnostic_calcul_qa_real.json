@@ -1,0 +1,351 @@
+[
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "question": "Sur la facture Free, de combien le montant TTC dépasse-t-il le montant HT ?",
+    "attendu": "5.00",
+    "champs": {
+      "numero_facture": "562044387",
+      "date": "02 Juillet 2015",
+      "emetteur": "Free SAS",
+      "client": "de Lattre Alexis",
+      "total": 29.99,
+      "devise": "EUR",
+      "lignes": [
+        {
+          "description": "Abonnements, forfaits et options",
+          "quantite": null,
+          "prix_unitaire": 29.99,
+          "montant": 29.99
+        }
+      ]
+    },
+    "filtre": false,
+    "plan": null,
+    "resultat_python": null
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "question": "Sur la facture Netpresse, combien coûteraient 4 justificatifs PDF au prix unitaire indiqué ?",
+    "attendu": "3.00",
+    "champs": {
+      "numero_facture": "2022089083",
+      "date": "28/11/2022",
+      "emetteur": "ALEXINUX de Lattre Alexis",
+      "client": "le-tout-lyon.fr",
+      "total": 56.02,
+      "devise": "€",
+      "lignes": [
+        {
+          "description": "Justificatif PDF 1",
+          "quantite": null,
+          "prix_unitaire": 0.75,
+          "montant": 0.75
+        },
+        {
+          "description": "Justificatif Papier",
+          "quantite": null,
+          "prix_unitaire": 3.5,
+          "montant": 0
+        }
+      ]
+    },
+    "filtre": true,
+    "plan": {
+      "operation": "multiplication",
+      "operandes": [
+        "lignes[0].prix_unitaire",
+        4
+      ]
+    },
+    "resultat_python": "0.75 × 4 = 3"
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "question": "Sur la facture AWS, quel pourcentage du total représente le service Amazon Glacier ?",
+    "attendu": "54.01",
+    "champs": {
+      "numero_facture": "42183017",
+      "date": "2014-08-03",
+      "emetteur": "Amazon Web Services, Inc.",
+      "client": "iViveLabs Limited",
+      "total": 4.11,
+      "devise": "USD",
+      "lignes": [
+        {
+          "description": "AWS Data Transfer",
+          "quantite": 0.01,
+          "prix_unitaire": null,
+          "montant": 0.01
+        },
+        {
+          "description": "Amazon Elastic Compute Cloud",
+          "quantite": 1.87,
+          "prix_unitaire": null,
+          "montant": 1.87
+        },
+        {
+          "description": "Amazon Glacier",
+          "quantite": 2.22,
+          "prix_unitaire": null,
+          "montant": 2.22
+        },
+        {
+          "description": "Amazon Simple Storage Service",
+          "quantite": 0.01,
+          "prix_unitaire": null,
+          "montant": 0.01
+        }
+      ]
+    },
+    "filtre": true,
+    "plan": {
+      "operation": "pourcentage_de",
+      "operandes": [
+        "total",
+        4.11
+      ]
+    },
+    "resultat_python": "4.11 × 4.11 / 100 = 0.17"
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "question": "Sur la facture Flipkart, quel était le prix de la carte mémoire avant la remise promotionnelle de 40 roupies ?",
+    "attendu": "359.00",
+    "champs": {
+      "numero_facture": "# BLR_WFLD20151000982590",
+      "date": "20-10-2015",
+      "emetteur": "WS Retail Services Pvt. Ltd.",
+      "client": "Anushrut Singh",
+      "total": 319.0,
+      "devise": null,
+      "lignes": [
+        {
+          "description": "Memory cards SanDisk Ultra 16 GB MicroSDHC Class 1",
+          "quantite": 1,
+          "prix_unitaire": 278.61,
+          "montant": 40.39
+        }
+      ]
+    },
+    "filtre": true,
+    "plan": {
+      "operation": "multiplication",
+      "operandes": [
+        "lignes[0].prix_unitaire",
+        1
+      ]
+    },
+    "resultat_python": "278.61 × 1 = 278.61"
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "question": "Sur la facture QualityHosting, combien coûtent au total les deux lignes Small Business StandardExchange 2010 ?",
+    "attendu": "7.78",
+    "champs": {
+      "numero_facture": "30064443",
+      "date": "7. Mai 2014",
+      "emetteur": "QualityHosting AG",
+      "client": "iViveLabs Ltd.",
+      "total": 34.73,
+      "devise": "EUR",
+      "lignes": [
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 3.89,
+          "montant": 3.89
+        },
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 5.39,
+          "montant": 5.39
+        },
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 5.39,
+          "montant": 5.39
+        },
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 5.39,
+          "montant": 5.39
+        },
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 5.39,
+          "montant": 5.39
+        },
+        {
+          "description": "Grundgebühr pro Einheit",
+          "quantite": 1,
+          "prix_unitaire": 5.39,
+          "montant": 5.39
+        }
+      ]
+    },
+    "filtre": true,
+    "plan": {
+      "operation": "somme",
+      "operandes": [
+        "lignes[1].montant",
+        "lignes[2].montant"
+      ]
+    },
+    "resultat_python": "5.39 + 5.39 = 10.78"
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "question": "Sur la facture Hetzner, quel est le prix total des 6 adresses IP supplémentaires ?",
+    "attendu": "5.04",
+    "champs": {
+      "numero_facture": "R0005532486",
+      "date": "19.01.2016",
+      "emetteur": "Hetzner Online GmbH",
+      "client": "Usegroup Inh. Jochen Stärk",
+      "total": 104,
+      "devise": "€",
+      "lignes": [
+        {
+          "description": "EQ4 #57811, 30 TB",
+          "quantite": 1,
+          "prix_unitaire": 41.18,
+          "montant": 41.18
+        },
+        {
+          "description": "zusätzliche IP 78.46.77.79, Server #57811",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        },
+        {
+          "description": "zusätzliche IP 178.63.90.222, Server #57811",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        },
+        {
+          "description": "zusätzliche IP 178.63.90.221, Server #57811",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        },
+        {
+          "description": "EX40 #253154, 30 TB",
+          "quantite": 1,
+          "prix_unitaire": 41.18,
+          "montant": 41.18
+        },
+        {
+          "description": "zusätzliche IP 144.76.122.90, Server #253154",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        },
+        {
+          "description": "zusätzliche IP 144.76.212.187, Server #253154",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        },
+        {
+          "description": "zusätzliche IP 144.76.212.186, Server #253154",
+          "quantite": 1,
+          "prix_unitaire": 0.84,
+          "montant": 0.84
+        }
+      ]
+    },
+    "filtre": true,
+    "plan": {
+      "operation": "somme",
+      "operandes": [
+        "lignes[5].montant",
+        "lignes[6].montant",
+        "lignes[7].montant"
+      ]
+    },
+    "resultat_python": "0.84 + 0.84 + 0.84 = 2.52"
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "question": "Sur la facture Coolblue, combien ont coûté ensemble la Nintendo 3DS XL et le jeu Mario Kart 7 ?",
+    "attendu": "233.99",
+    "champs": {
+      "numero_facture": "12572103",
+      "date": "19 avril 2014",
+      "emetteur": "Coolblue B.V.",
+      "client": "Pino Bluebird",
+      "total": 717.97,
+      "devise": "€",
+      "lignes": [
+        {
+          "description": "Apple iPad Air Wifi 16 GB Zilver",
+          "quantite": 1,
+          "prix_unitaire": 399.0,
+          "montant": 84.24
+        },
+        {
+          "description": "Decoded Leather Slim Cover Apple iPad Air 2 Zwart",
+          "quantite": 1,
+          "prix_unitaire": 69.99,
+          "montant": 14.99
+        },
+        {
+          "description": "Nintendo 3DS XL Wit + Blauw",
+          "quantite": 1,
+          "prix_unitaire": 189.0,
+          "montant": 39.39
+        },
+        {
+          "description": "Nintendo AC-adapter",
+          "quantite": 1,
+          "prix_unitaire": 14.99,
+          "montant": 14.99
+        },
+        {
+          "description": "Mario Kart 7 3DS",
+          "quantite": 1,
+          "prix_unitaire": 44.99,
+          "montant": 9.32
+        }
+      ]
+    },
+    "filtre": false,
+    "plan": null,
+    "resultat_python": null
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "question": "Sur la facture Saeco, quel montant reste-t-il si on retire la TVA du total ?",
+    "attendu": "41.31",
+    "champs": {
+      "numero_facture": "SCONL0303006280999",
+      "date": "8-9-2022",
+      "emetteur": "Strategic Corp bosd",
+      "client": "SCONL000000444",
+      "total": 49.99,
+      "devise": "EUR",
+      "lignes": [
+        {
+          "description": "Onderhoudsset CA6707/10",
+          "quantite": 1,
+          "prix_unitaire": 49.99,
+          "montant": 49.99
+        },
+        {
+          "description": "SX Flyer SAECO Korting KVDNL",
+          "quantite": 1,
+          "prix_unitaire": 0,
+          "montant": 0
+        }
+      ]
+    },
+    "filtre": false,
+    "plan": null,
+    "resultat_python": null
+  }
+]

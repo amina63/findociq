@@ -1,0 +1,428 @@
+[
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "type": "lookup",
+    "question": "Quel est l'identifiant client sur la facture Free ?",
+    "attendue": "10577874",
+    "identifiante": true,
+    "mots_discriminants": [
+      "free"
+    ],
+    "direct": "FO10479674",
+    "direct_calcul": "FO10479674",
+    "calcul_declenche": false,
+    "rag": "FO10479674",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Free, de combien le montant TTC dépasse-t-il le montant HT ?",
+    "attendue": "5.00",
+    "identifiante": true,
+    "mots_discriminants": [
+      "free"
+    ],
+    "direct": "5,00 €",
+    "direct_calcul": "5,00 €",
+    "calcul_declenche": false,
+    "rag": "5,00 €",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/free_fiber.pdf",
+    "type": "sans_reponse",
+    "question": "Quel est le numéro de téléphone portable de l'abonné Free ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "abonne",
+      "free"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "32 44",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "type": "lookup",
+    "question": "Quel est le numéro de dossier indiqué sur la facture Netpresse ?",
+    "attendue": "365146",
+    "identifiante": true,
+    "mots_discriminants": [
+      "netpresse"
+    ],
+    "direct": "365146",
+    "direct_calcul": "365146",
+    "calcul_declenche": false,
+    "rag": "SCONL0303006280999",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Netpresse, combien coûteraient 4 justificatifs PDF au prix unitaire indiqué ?",
+    "attendue": "3.00",
+    "identifiante": true,
+    "mots_discriminants": [
+      "justificatif",
+      "netpresse",
+      "pdf"
+    ],
+    "direct": "4 * 0,75 = 3",
+    "direct_calcul": "3 €",
+    "calcul_declenche": true,
+    "rag": "40€",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/NetpresseInvoice.pdf",
+    "type": "sans_reponse",
+    "question": "Quel est le numéro de SIRET du client ALEXINUX ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "alexinux",
+      "siret"
+    ],
+    "direct": "53084813400017",
+    "direct_calcul": "53084813400017",
+    "calcul_declenche": false,
+    "rag": "Cette information n'est pas présente dans ce document.",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "type": "lookup",
+    "question": "Quel est le numéro de compte Amazon Web Services du client ?",
+    "attendue": "296664039561",
+    "identifiante": true,
+    "mots_discriminants": [
+      "amazon",
+      "web"
+    ],
+    "direct": "296664039561",
+    "direct_calcul": "296664039561",
+    "calcul_declenche": false,
+    "rag": "296664039561",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "type": "calcul",
+    "question": "Sur la facture AWS, quel pourcentage du total représente le service Amazon Glacier ?",
+    "attendue": "54.01",
+    "identifiante": true,
+    "mots_discriminants": [
+      "amazon",
+      "aws",
+      "glacier"
+    ],
+    "direct": "2.22",
+    "direct_calcul": "0.17 USD",
+    "calcul_declenche": true,
+    "rag": "0.00",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/AmazonWebServices.pdf",
+    "type": "sans_reponse",
+    "question": "Quel est le numéro de TVA intracommunautaire d'Amazon Web Services ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "amazon",
+      "web"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "Cette information n'est pas présente dans ce document.",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "type": "lookup",
+    "question": "Quel est l'identifiant de commande (Order ID) de la facture Flipkart ?",
+    "attendue": "OD304175096047380001",
+    "identifiante": true,
+    "mots_discriminants": [
+      "flipkart"
+    ],
+    "direct": "OD304175096047380001",
+    "direct_calcul": "OD304175096047380001",
+    "calcul_declenche": false,
+    "rag": "OD304175096047380001",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Flipkart, quel était le prix de la carte mémoire avant la remise promotionnelle de 40 roupies ?",
+    "attendue": "359.00",
+    "identifiante": true,
+    "mots_discriminants": [
+      "flipkart"
+    ],
+    "direct": "278.61 - 40 = 238.61",
+    "direct_calcul": "278.61",
+    "calcul_declenche": true,
+    "rag": "278.61 - 40.39 = 238.22",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/FlipkartInvoice.pdf",
+    "type": "sans_reponse",
+    "question": "Quelle est l'adresse email du client sur la facture Flipkart ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "flipkart"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "alexis@via.ecp.fr",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "type": "lookup",
+    "question": "Quel est le numéro de contrat sur la facture QualityHosting ?",
+    "attendue": "CON02858",
+    "identifiante": true,
+    "mots_discriminants": [
+      "qualityhosting"
+    ],
+    "direct": "CON02858",
+    "direct_calcul": "CON02858",
+    "calcul_declenche": false,
+    "rag": "CON02858",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "type": "calcul",
+    "question": "Sur la facture QualityHosting, combien coûtent au total les deux lignes Small Business StandardExchange 2010 ?",
+    "attendue": "7.78",
+    "identifiante": true,
+    "mots_discriminants": [
+      "2010",
+      "busines",
+      "qualityhosting",
+      "small",
+      "standardexchange"
+    ],
+    "direct": "6,78",
+    "direct_calcul": "10.78 EUR",
+    "calcul_declenche": true,
+    "rag": "6,78",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/QualityHosting.pdf",
+    "type": "sans_reponse",
+    "question": "Quel est le numéro de téléphone du client iViveLabs ?",
+    "attendue": null,
+    "identifiante": false,
+    "mots_discriminants": [],
+    "direct": "+49 6051 916 44 10",
+    "direct_calcul": "+49 6051 916 44 10",
+    "calcul_declenche": false,
+    "rag": "32 44",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "type": "lookup",
+    "question": "Quel est le numéro client (Kundennummer) sur la facture Hetzner ?",
+    "attendue": "K0100077603",
+    "identifiante": true,
+    "mots_discriminants": [
+      "hetzner",
+      "kundennummer"
+    ],
+    "direct": "K0100077603",
+    "direct_calcul": "K0100077603",
+    "calcul_declenche": false,
+    "rag": "K0100077603",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Hetzner, quel est le prix total des 6 adresses IP supplémentaires ?",
+    "attendue": "5.04",
+    "identifiante": true,
+    "mots_discriminants": [
+      "hetzner"
+    ],
+    "direct": "0,84 €",
+    "direct_calcul": "57.79 €",
+    "calcul_declenche": true,
+    "rag": "0,84 €",
+    "ok_direct": false,
+    "ok_direct_calcul": false,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/hetzner.pdf",
+    "type": "sans_reponse",
+    "question": "Quelle est la date de livraison des serveurs Hetzner ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "hetzner"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "Cette information n'est pas présente dans ce document.",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "type": "lookup",
+    "question": "Quel est le numéro de commande (ordernummer) sur la facture Coolblue ?",
+    "attendue": "12572103",
+    "identifiante": true,
+    "mots_discriminants": [
+      "coolblue",
+      "ordernummer"
+    ],
+    "direct": "12572103",
+    "direct_calcul": "12572103",
+    "calcul_declenche": false,
+    "rag": "12572103",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Coolblue, combien ont coûté ensemble la Nintendo 3DS XL et le jeu Mario Kart 7 ?",
+    "attendue": "233.99",
+    "identifiante": true,
+    "mots_discriminants": [
+      "3ds",
+      "coolblue",
+      "kart",
+      "mario",
+      "nintendo"
+    ],
+    "direct": "189,00 + 44,99 = 233,99",
+    "direct_calcul": "189,00 + 44,99 = 233,99",
+    "calcul_declenche": false,
+    "rag": "189,00 + 44,99 = 233,99",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  },
+  {
+    "fichier": "factures_reelles/coolblue1.pdf",
+    "type": "sans_reponse",
+    "question": "Quelle est l'adresse email du client Pino Bluebird ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "bluebird",
+      "pino"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "www.tabletcenter.nl",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "type": "lookup",
+    "question": "Quel est le montant de la TVA (BTW bedrag) sur la facture Saeco ?",
+    "attendue": "8.68",
+    "identifiante": true,
+    "mots_discriminants": [
+      "bedrag",
+      "saeco"
+    ],
+    "direct": "8,68",
+    "direct_calcul": "8,68",
+    "calcul_declenche": false,
+    "rag": "41,31",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "type": "calcul",
+    "question": "Sur la facture Saeco, quel montant reste-t-il si on retire la TVA du total ?",
+    "attendue": "41.31",
+    "identifiante": true,
+    "mots_discriminants": [
+      "saeco"
+    ],
+    "direct": "49,99 - 8,68 = 41,31",
+    "direct_calcul": "49,99 - 8,68 = 41,31",
+    "calcul_declenche": false,
+    "rag": "49,99",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": false
+  },
+  {
+    "fichier": "factures_reelles/saeco.pdf",
+    "type": "sans_reponse",
+    "question": "Quel est le nom du livreur de la commande Saeco ?",
+    "attendue": null,
+    "identifiante": true,
+    "mots_discriminants": [
+      "saeco"
+    ],
+    "direct": "Cette information n'est pas présente dans ce document.",
+    "direct_calcul": "Cette information n'est pas présente dans ce document.",
+    "calcul_declenche": false,
+    "rag": "Cette information n'est pas présente dans ce document.",
+    "ok_direct": true,
+    "ok_direct_calcul": true,
+    "ok_rag": true
+  }
+]

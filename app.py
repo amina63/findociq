@@ -11,15 +11,45 @@ from calcul import repondre_calcul
 
 st.title("FinDocIQ — Extraction et Q&A sur documents financiers")
 
+DOSSIER_TELEVERSEMENTS = "televersements"   # factures téléversées dans l'app (non versionnées)
+
+
+def empreinte(chemin):
+    """Taille + date de modification : change si le fichier change (sert de clé de cache)."""
+    return (os.path.getsize(chemin), os.path.getmtime(chemin))
+
+
 @st.cache_data
-def champs_du_document(chemin):
+def champs_du_document(chemin, cle):
     return extraire_champs(extraire_texte_pdf(chemin)) or {}
+
+
+def champs_en_cache(chemin):
+    # cle = empreinte : si le fichier est remplacé, l'extraction est refaite ; sinon elle vient du cache
+    return champs_du_document(chemin, cle=empreinte(chemin))
 
 
 @st.cache_resource
 def index_de_la_collection(fichiers):
     """Indexe la collection UNE seule fois (et non à chaque question)."""
     return indexer_documents(list(fichiers))
+
+
+def enregistrer_televersement(fichier_televerse):
+    """Copie le PDF téléversé dans televersements/ (seulement s'il est nouveau ou modifié)."""
+    os.makedirs(DOSSIER_TELEVERSEMENTS, exist_ok=True)
+    chemin = os.path.join(DOSSIER_TELEVERSEMENTS, os.path.basename(fichier_televerse.name))
+    contenu = fichier_televerse.getbuffer()
+    if not os.path.exists(chemin) or os.path.getsize(chemin) != len(contenu):
+        with open(chemin, "wb") as f:
+            f.write(contenu)
+    return chemin.replace("\\", "/")
+
+
+def nom_affiche(chemin):
+    nom = os.path.basename(chemin)
+    return f"📎 {nom} (téléversé)" if chemin.startswith(DOSSIER_TELEVERSEMENTS) else nom
+
 
 onglet_extraction, onglet_qa, onglet_metriques = st.tabs(
     ["📄 Extraction de champs", "💬 Question/Réponse", "📊 Métriques du système"]
@@ -32,20 +62,16 @@ with onglet_extraction:
     fichier_televerse = st.file_uploader("Choisis un PDF", type="pdf")
 
     if fichier_televerse is not None:
-        chemin_temporaire = f"temp_{fichier_televerse.name}"
-        with open(chemin_temporaire, "wb") as f:
-            f.write(fichier_televerse.getbuffer())
+        chemin_televerse = enregistrer_televersement(fichier_televerse)
+        st.session_state.dernier_televerse = chemin_televerse
 
         with st.spinner("Extraction en cours..."):
-            texte = extraire_texte_pdf(chemin_temporaire)
-            champs = extraire_champs(texte)
-
-        os.remove(chemin_temporaire)
+            champs = champs_en_cache(chemin_televerse)
 
         if not champs:
             st.error("L'extraction a échoué (voir le terminal). Vérifie qu'Ollama est lancé.")
         else:
-            st.success("Extraction terminée")
+            st.success("Extraction terminée — ce document est aussi disponible dans l'onglet Question/Réponse.")
 
             # Tableau des champs simples (pas les lignes, affichées à part)
             champs_simples = {k: v for k, v in champs.items() if k != "lignes"}
@@ -58,7 +84,9 @@ with onglet_extraction:
 with onglet_qa:
     st.subheader("Pose une question sur tes documents")
 
-    fichiers_disponibles = glob.glob("factures/*.pdf")
+    # Factures de démonstration + factures téléversées dans l'onglet 1
+    fichiers_disponibles = [f.replace("\\", "/") for f in
+                            sorted(glob.glob(f"{DOSSIER_TELEVERSEMENTS}/*.pdf")) + sorted(glob.glob("factures/*.pdf"))]
 
     mode = st.radio(
         "Mode :",
@@ -67,7 +95,10 @@ with onglet_qa:
 
     fichier_choisi = None
     if mode == "Document unique (direct)":
-        fichier_choisi = st.selectbox("Choisis un document :", fichiers_disponibles)
+        dernier = st.session_state.get("dernier_televerse")
+        position = fichiers_disponibles.index(dernier) if dernier in fichiers_disponibles else 0
+        fichier_choisi = st.selectbox("Choisis un document :", fichiers_disponibles,
+                                      index=position, format_func=nom_affiche)
 
     # Initialise l'historique de conversation, une seule fois
     if "historique_chat" not in st.session_state:
@@ -93,7 +124,7 @@ with onglet_qa:
         with st.spinner("Réflexion en cours..."):
             if mode == "Document unique (direct)":
                 texte = extraire_texte_pdf(fichier_choisi)
-                resultat = repondre_calcul(question, champs_du_document(fichier_choisi)) or repondre_question(texte, question)
+                resultat = repondre_calcul(question, champs_en_cache(fichier_choisi)) or repondre_question(texte, question)
 
             else:
                 index, chunks_avec_source = index_de_la_collection(tuple(fichiers_disponibles))
@@ -139,9 +170,20 @@ with onglet_metriques:
     st.caption("Calcul Python : le LLM choisit l'opération, Python calcule. "
                "0 faux déclenchement sur les 48 questions qui ne sont pas des calculs.")
 
+    st.write("**3. Question/Réponse — 24 questions sur les 8 factures réelles (jamais vues)**")
+    st.table({
+        "Type": ["lookup (8)", "calcul (8)", "sans réponse (8)"],
+        "Direct (bon document)": ["88%", "50%", "75%"],
+        "Direct + calcul Python": ["88%", "50%", "75%"],
+        "RAG": ["62%", "25%", "50%"],
+    })
+    st.caption("Sur les factures réelles, le calcul Python n'apporte pas de gain : le calcul est toujours exact, "
+               "mais le plan (opération, lignes choisies) ou les lignes extraites sont souvent faux.")
+
     st.info("ℹ️ Le modèle lit correctement un document donné (97%). La baisse en RAG vient surtout "
             "des questions qui ne précisent pas de quelle facture il s'agit (24 sur 36) : "
             "le mode RAG a besoin de questions précises.")
-    st.warning("⚠️ Limites connues : calcul Python branché seulement en mode direct ; "
+    st.warning("⚠️ Limites connues : en RAG, risque de réponse tirée d'une autre facture ; "
+               "calcul Python branché seulement en mode direct et peu efficace sur les factures réelles ; "
                "garde-fou anti-hallucination à 83% (ex. émetteur inventé quand il est absent du texte) ; "
                "OCR des reçus scannés : nom du commerce 0% exact (74% de similarité).")

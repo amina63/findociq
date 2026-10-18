@@ -12,8 +12,9 @@ Ex. "Quel est le prix du gâteau d'anniversaire ?" -> identifiante (gâteau n'es
 Ex. "Quelle est la date de la facture ?" -> non identifiante : en mode RAG, sur 12 factures,
 la question ne dit pas DE QUELLE facture on parle, aucune réponse ne peut être "la bonne".
 """
-import sys
+import os
 import time
+import argparse
 import json
 import glob
 from collections import Counter
@@ -110,20 +111,25 @@ def pct(n, t):
     return f"{n}/{t} ({n / t * 100:.0f}%)" if t else "-"
 
 
-FICHIER_PROGRES = "eval_qa_progress.json"
+def noms_fichiers(chemin_qa):
+    """qa_pairs.json -> eval_qa_progress.json / eval_qa_details.json (noms historiques)
+    qa_real.json  -> eval_qa_progress_qa_real.json / eval_qa_details_qa_real.json"""
+    nom = os.path.splitext(os.path.basename(chemin_qa))[0]
+    suffixe = "" if nom == "qa_pairs" else f"_{nom}"
+    return f"eval_qa_progress{suffixe}.json", f"eval_qa_details{suffixe}.json"
 
 
-def charger_progres():
+def charger_progres(fichier_progres):
     """Questions déjà terminées lors d'une exécution précédente (reprise après arrêt)."""
     try:
-        with open(FICHIER_PROGRES, "r", encoding="utf-8") as f:
+        with open(fichier_progres, "r", encoding="utf-8") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
 
-def sauver_progres(details):
-    with open(FICHIER_PROGRES, "w", encoding="utf-8") as f:
+def sauver_progres(details, fichier_progres):
+    with open(fichier_progres, "w", encoding="utf-8") as f:
         json.dump(details, f, indent=2, ensure_ascii=False)
 
 
@@ -131,21 +137,23 @@ def etape(nom):
     print(f"   {nom}...", end="", flush=True)
 
 
-def evaluer(k=5, max_docs=None):
-    qa_pairs = charger_qa_pairs()
+def evaluer(k=5, max_docs=None, chemin_qa="qa_pairs.json", dossier="factures"):
+    fichier_progres, fichier_details = noms_fichiers(chemin_qa)
+    qa_pairs = charger_qa_pairs(chemin_qa)
+    print(f"Questions : {chemin_qa} | Collection RAG : {dossier}/*.pdf")
     if max_docs:
         qa_pairs = qa_pairs[:max_docs]   # mode test rapide
     debut = time.time()
 
-    details = charger_progres()
+    details = charger_progres(fichier_progres)
     deja_faites = {(d["fichier"], d["question"]) for d in details}
     if details:
-        print(f"Reprise : {len(details)} questions déjà faites (dans {FICHIER_PROGRES}), on les saute.")
+        print(f"Reprise : {len(details)} questions déjà faites (dans {fichier_progres}), on les saute.")
 
     # Vocabulaire de CHAQUE document du jeu de questions (toujours les 12, même en mode rapide)
     mots_par_doc = {e["fichier"]: mots_significatifs(extraire_texte_pdf(e["fichier"]))
-                    for e in charger_qa_pairs()}
-    index, chunks = indexer_documents(glob.glob("factures/*.pdf"))
+                    for e in charger_qa_pairs(chemin_qa)}
+    index, chunks = indexer_documents(glob.glob(f"{dossier}/*.pdf"))
 
     nb_total = sum(len(e["questions"]) for e in qa_pairs)
     fait = 0
@@ -182,17 +190,17 @@ def evaluer(k=5, max_docs=None):
                             "ok_direct": comparer_reponse(direct, attendue, t),
                             "ok_direct_calcul": comparer_reponse(rep_c, attendue, t),
                             "ok_rag": comparer_reponse(rep_rag, attendue, t)})
-            sauver_progres(details)     # sauvegarde après CHAQUE question
+            sauver_progres(details, fichier_progres)     # sauvegarde après CHAQUE question
 
-    afficher_resultats(details, qa_pairs)
+    afficher_resultats(details, qa_pairs, fichier_details, fichier_progres)
 
 
-def afficher_resultats(details, qa_pairs):
+def afficher_resultats(details, qa_pairs, fichier_details, fichier_progres):
     # On ne garde que les questions du jeu évalué (utile en mode rapide)
     voulues = {(normaliser_chemin(e["fichier"]), q["question"]) for e in qa_pairs for q in e["questions"]}
     details = [d for d in details if (d["fichier"], d["question"]) in voulues]
 
-    with open("eval_qa_details.json", "w", encoding="utf-8") as f:
+    with open(fichier_details, "w", encoding="utf-8") as f:
         json.dump(details, f, indent=2, ensure_ascii=False)
 
     print(f"\n{'Type':<14}{'Direct':<14}{'Direct+calcul':<16}{'RAG (toutes)':<15}{'RAG (identifiantes)':<20}")
@@ -208,11 +216,17 @@ def afficher_resultats(details, qa_pairs):
     print(f"\nFaux déclenchements du calcul (hors questions calcul) : {len(faux)}")
     for d in faux:
         print("  -", d["question"], "->", d["direct_calcul"])
-    print("Détail : eval_qa_details.json")
-    print(f"Pour repartir de zéro (nouvelle mesure complète) : supprimer {FICHIER_PROGRES}")
+    print(f"Détail : {fichier_details}")
+    print(f"Pour repartir de zéro (nouvelle mesure complète) : supprimer {fichier_progres}")
 
 
 if __name__ == "__main__":
-    # python eval_qa.py      -> tout (60 questions)
-    # python eval_qa.py 2    -> test rapide sur les 2 premiers documents seulement
-    evaluer(max_docs=int(sys.argv[1]) if len(sys.argv) > 1 else None)
+    # python eval_qa.py                                            -> 60 questions, factures de test
+    # python eval_qa.py 2                                          -> test rapide (2 premiers documents)
+    # python eval_qa.py --qa qa_real.json --dossier factures_reelles  -> 24 questions, factures réelles
+    parser = argparse.ArgumentParser(description="Évaluation question/réponse : direct, direct+calcul, RAG")
+    parser.add_argument("max_docs", nargs="?", type=int, default=None, help="nombre de documents (test rapide)")
+    parser.add_argument("--qa", default="qa_pairs.json", help="fichier de questions")
+    parser.add_argument("--dossier", default="factures", help="dossier des PDF indexés pour le RAG")
+    args = parser.parse_args()
+    evaluer(max_docs=args.max_docs, chemin_qa=args.qa, dossier=args.dossier)
