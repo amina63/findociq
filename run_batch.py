@@ -4,10 +4,8 @@ import json
 import glob
 import argparse
 
-from router import est_document_scanne
-from text_extract import extraire_texte_pdf
-from ocr import extraire_texte_image
-from fields import extraire_champs
+from document import lire_document
+from fields import extraire_champs, valider_champs
 
 
 def traiter_un_document(chemin_fichier):
@@ -16,16 +14,9 @@ def traiter_un_document(chemin_fichier):
     (pdfplumber ou OCR selon le cas), puis extrait les champs structurés.
     Retourne un dictionnaire prêt à être sauvegardé en JSON.
     """
-    scanne = est_document_scanne(chemin_fichier)
-
-    if scanne:
-        texte = extraire_texte_image(chemin_fichier)
-        methode = "ocr"
-    else:
-        texte = extraire_texte_pdf(chemin_fichier)
-        methode = "pdfplumber"
-
-    champs = extraire_champs(texte)
+    # PDF numérique -> pdfplumber ; PDF scanné ou image -> OCR (voir document.py)
+    texte, methode = lire_document(chemin_fichier)
+    champs = valider_champs(extraire_champs(texte))
 
     return {
         "fichier_source": chemin_fichier,
@@ -41,7 +32,9 @@ def traiter_dossier(dossier_entree, dossier_sortie):
     """
     os.makedirs(dossier_sortie, exist_ok=True)
 
-    fichiers = glob.glob(f"{dossier_entree}/*.pdf") + glob.glob(f"{dossier_entree}/*.jpg")
+    fichiers = []
+    for extension in ("pdf", "jpg", "jpeg", "png"):
+        fichiers += glob.glob(f"{dossier_entree}/*.{extension}")
 
     if not fichiers:
         print(f"Aucun fichier trouvé dans {dossier_entree}")

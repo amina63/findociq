@@ -1,16 +1,32 @@
+def _nombre(valeur):
+    """350 / 350.0 / '350,00' -> 350.0 ; None ou illisible -> None."""
+    if valeur is None or isinstance(valeur, bool):
+        return None
+    if isinstance(valeur, (int, float)):
+        return float(valeur)
+    try:
+        return float(str(valeur).replace(" ", "").replace(",", "."))
+    except ValueError:
+        return None
+
+
 def verifier_total(lignes, total_annonce, tolerance=0.01):
     """
     Vérifie que le total annoncé correspond à la somme des montants des lignes.
     'lignes' est une liste de dictionnaires avec au moins une clé 'montant'.
+    Retourne None si la vérification est impossible (total ou montants manquants).
     """
-    somme_calculee = sum(ligne["montant"] for ligne in lignes)
-    coherent = abs(somme_calculee - total_annonce) < tolerance
+    total = _nombre(total_annonce)
+    montants = [_nombre(l.get("montant")) for l in (lignes or []) if isinstance(l, dict)]
+    if total is None or not montants or any(m is None for m in montants):
+        return None
 
+    somme_calculee = round(sum(montants), 2)
     return {
-        "coherent": coherent,
+        "coherent": abs(somme_calculee - total) < tolerance,
         "somme_calculee": somme_calculee,
-        "total_annonce": total_annonce,
-        "difference": round(somme_calculee - total_annonce, 2)
+        "total_annonce": total,
+        "difference": round(somme_calculee - total, 2)
     }
 
 
@@ -18,12 +34,14 @@ def calculer_part_de_chaque_ligne(lignes, total):
     """
     Calcule, pour chaque ligne, le pourcentage qu'elle représente du total.
     """
+    total = _nombre(total)
     resultats = []
-    for ligne in lignes:
-        part = (ligne["montant"] / total * 100) if total else 0
+    for ligne in lignes or []:
+        montant = _nombre(ligne.get("montant"))
+        part = (montant / total * 100) if (total and montant is not None) else 0
         resultats.append({
-            "description": ligne["description"],
-            "montant": ligne["montant"],
+            "description": ligne.get("description"),
+            "montant": montant,
             "part_du_total": round(part, 1)
         })
     return resultats
@@ -44,8 +62,8 @@ if __name__ == "__main__":
     print(f"Lignes extraites : {lignes}")
     print(f"Total annoncé : {total_annonce}\n")
 
-    if lignes and total_annonce is not None:
-        verification = verifier_total(lignes, total_annonce)
+    verification = verifier_total(lignes, total_annonce)
+    if verification is not None:
         print("=== Vérification du total ===")
         print(verification)
 

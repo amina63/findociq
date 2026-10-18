@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-url_base = os.getenv("OLLAMA_URL")
+url_base = os.getenv("OLLAMA_URL", "http://localhost:11434")   # valeur par défaut si .env absent
 
 def obtenir_embedding(texte):
     """

@@ -8,9 +8,9 @@ Système d'extraction et de question-réponse sur documents financiers (factures
 - **Question/réponse ancrée** : réponses avec citation exacte du passage source, garde-fou anti-hallucination
 - **Calculs fiables** (`calcul.py`) : le LLM choisit l'opération et les valeurs, **Python fait le calcul**
 - **RAG multi-documents** : recherche automatique dans une collection de documents (FAISS + embeddings multilingues)
-- **OCR** : détection automatique document numérique/scanné, extraction via RapidOCR
+- **OCR** : détection automatique document numérique/scanné (`document.py`), extraction via RapidOCR — PDF scannés et images (jpg/png) acceptés dans l'app et dans `run_batch.py`
 - **Vérifications comptables** : cohérence total = somme des lignes, ratios
-- **Interface Streamlit** : upload, tableau de champs extraits, chat Q&A (y compris sur la facture téléversée), dashboard de métriques
+- **Interface Streamlit** : aperçu du document à côté des champs extraits, export JSON, chat avec justification de chaque réponse (citation, calcul Python), tableau des métriques mesurées
 
 ## Installation
 
@@ -113,9 +113,9 @@ Une exécution, llama3.2 3B local, temperature 0. Petits échantillons : ordres 
 ## Architecture
 
 ```
-PDF/image → router.py (numérique vs scanné)
+PDF/image → document.py → router.py (numérique vs scanné)
     ├─ numérique → text_extract.py (pdfplumber)
-    └─ scanné    → ocr.py (RapidOCR)
+    └─ scanné    → ocr.py (RapidOCR, page par page)
          ↓
     fields.py (extraction structurée, LLM + schéma JSON)
          ↓

@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from text_extract import extraire_texte_pdf
 
 load_dotenv()
-url_base = os.getenv("OLLAMA_URL")
+url_base = os.getenv("OLLAMA_URL", "http://localhost:11434")   # valeur par défaut si .env absent
 
 def repondre_question(texte_document, question):
     """
